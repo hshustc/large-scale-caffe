@@ -164,7 +164,7 @@ void ClassAwareImageDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
   int cls_base_offset = 0;
   int cls_nimgs = 0;
   Dtype cls_offset = 0;
-  Dtype eps = 1e-3;
+  Dtype eps = 1e-5;
   for (int item_id = 0; item_id < batch_size; ++item_id) {
     // get a blob
     timer.Start();
@@ -176,10 +176,10 @@ void ClassAwareImageDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
     caffe_rng_uniform(1, Dtype(0), Dtype(cls_nimgs - eps), &cls_offset);
 
     lines_id_ = cls_base_offset + floor(cls_offset); 
-    CHECK_GT(lines_size, lines_id_);
     CHECK_EQ(lines_[lines_id_].second, cls_id)<<" cls_id: "<<cls_id<<" cls_nimgs: "<<cls_nimgs
         <<" cls_base_offset: "<<cls_base_offset<<" cls_offset: "<<cls_offset
         <<" line: "<<lines_[lines_id_].first<<"\t"<<lines_[lines_id_].second;
+    CHECK_GT(lines_size, lines_id_);
     DLOG(INFO)<<cls_list_id_<<"\t"<<cls_id<<"\t"<<cls_nimgs<<"\t"<<floor(cls_offset)<<"\t"
         <<lines_[lines_id_].first<<"\t"<<lines_[lines_id_].second;
 
