@@ -175,7 +175,12 @@ void ClassAwareImageDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
     cls_nimgs = cls_nimgs_[cls_id];
     caffe_rng_uniform(1, Dtype(0), Dtype(cls_nimgs - eps), &cls_offset);
 
-    lines_id_ = cls_base_offset + floor(cls_offset); 
+    if(cls_offset < cls_nimgs){
+        lines_id_ = cls_base_offset + floor(cls_offset); 
+    }
+    else{
+        lines_id_ = cls_base_offset + floor(cls_offset - 1); 
+    }
     CHECK_EQ(lines_[lines_id_].second, cls_id)<<" cls_id: "<<cls_id<<" cls_nimgs: "<<cls_nimgs
         <<" cls_base_offset: "<<cls_base_offset<<" cls_offset: "<<cls_offset
         <<" line: "<<lines_[lines_id_].first<<"\t"<<lines_[lines_id_].second;
